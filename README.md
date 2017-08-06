@@ -1,4 +1,4 @@
-# node-las
+# node-las<sup style="color:red">beta</sup>
 LAS toolkit for working with Lidar data in Node
 
 This is very much a work in progress.
@@ -7,6 +7,14 @@ Thanks to the folks who built [jBinary], this may not be an impossible goal.
 
 The work on this is being done in the dev branch. The master will be updated when there is 
 a usable version of the program.
+
+Roadmap (not necessarily in order):
+* ensure interoperability with all LAS file versions and point data formats
+* Add read and write methods for `.las` files
+* Add read and write methods for `.laz` files
+* Add filter method for point data
+* Add write support for text (ASCII) and JSON file formats
+* Add sampling method(s) for point data
 
 <!-- References -->
 
