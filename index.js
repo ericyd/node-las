@@ -1,5 +1,6 @@
 const jBinary = require('jbinary');
 const lasTypeset = require('./lib/binaryTypeset');
+const fs = require('fs');
 
 jBinary
   .load('test/data/malheur-or.las', lasTypeset)
@@ -10,7 +11,8 @@ jBinary
     // do something with data in las file
     // data....
     // console.log(data);
-    console.log(data.variableLengthRecords);
+    console.log(data.extendedVariableLengthRecords.length);
+    fs.writeFileSync('VLRs.js', JSON.stringify(data.variableLengthRecords))
 
     jb.seek(0); // reusing same instance (and memory buffer) by resetting pointer
     // jb.writeAll(data); // writing entire content from data
