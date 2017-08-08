@@ -12,9 +12,10 @@ const getHashByAlgorithm = R.curry((algorithm, hashType, data) =>
 const md5 = getHashByAlgorithm('md5', 'hex');
 const sha256 = getHashByAlgorithm('sha256', 'hex');
 
-test('output file should match input file', done => {
+test('output file should match input file', () => {
   const input = fs.readFileSync(path.join(__dirname, 'data', 'malheur-or.las'));
-  const inputHash = md5(input);
+  const inputMD5 = md5(input);
+  const inputSHA256 = sha256(input);
 
   jBinary
     .load(path.join(__dirname, 'data', 'malheur-or.las'), lasTypeset)
@@ -28,6 +29,8 @@ test('output file should match input file', done => {
     .catch(console.log.bind(console));
 
   const output = fs.readFileSync('sample.new.las');
-  const outputHash = md5(output);
-  expect(outputHash).toEqual(inputHash);
+  const outputMD5 = md5(output);
+  const outputSHA256 = sha256(output);
+  expect(outputMD5).toEqual(inputMD5);
+  expect(outputSHA256).toEqual(inputSHA256);
 });
