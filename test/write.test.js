@@ -2,8 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const R = require('ramda');
-const jBinary = require('jbinary');
-const lasTypeset = require('../lib/binaryTypeset');
+const las = require('../');
 
 // define helper functions for comparing files
 const getHashByAlgorithm = R.curry((algorithm, hashType, data) =>
@@ -12,25 +11,19 @@ const getHashByAlgorithm = R.curry((algorithm, hashType, data) =>
 const md5 = getHashByAlgorithm('md5', 'hex');
 const sha256 = getHashByAlgorithm('sha256', 'hex');
 
-test('output file should match input file', () => {
-  const input = fs.readFileSync(path.join(__dirname, 'data', 'malheur-or.las'));
+test('output file should match input file', done => {
+  const inputPath = path.join(__dirname, 'data', 'malheur-or.las');
+  const outputPath = path.join(__dirname, 'data', 'sample2.las');
+  const input = fs.readFileSync(inputPath);
   const inputMD5 = md5(input);
   const inputSHA256 = sha256(input);
 
-  jBinary
-    .load(path.join(__dirname, 'data', 'malheur-or.las'), lasTypeset)
-    .then(function(jb /* : jBinary */) {
-      // read everything using type aliased in lasTypeset['jBinary.all']
-      var data = jb.readAll();
-      jb.seek(0); // reusing same instance (and memory buffer) by resetting pointer
-      jb.writeAll(data); // writing entire content from data
-      jb.saveAs('sample.new.las'); // saving file under given name
-    })
-    .catch(console.log.bind(console));
-
-  const output = fs.readFileSync('sample.new.las');
-  const outputMD5 = md5(output);
-  const outputSHA256 = sha256(output);
-  expect(outputMD5).toEqual(inputMD5);
-  expect(outputSHA256).toEqual(inputSHA256);
+  las.read(inputPath).write(outputPath).then(() => {
+    const output = fs.readFileSync(outputPath);
+    const outputMD5 = md5(output);
+    const outputSHA256 = sha256(output);
+    expect(outputMD5).toEqual(inputMD5);
+    expect(outputSHA256).toEqual(inputSHA256);
+    done();
+  });
 });
