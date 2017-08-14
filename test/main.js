@@ -19,4 +19,10 @@
 
 const las = require('../index');
 
-las.read('test/data/malheur-or.las').toJSON();
+const res = las
+  .read('test/data/malheur-or.las')
+  // .toJSON()
+  .write('sample.las')
+  // .then(data => console.log(data))
+  .catch(console.log.bind(console));
+// console.log(res);
