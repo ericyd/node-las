@@ -38,7 +38,7 @@ test('should write an identical file if filtered with empty options', done => {
 
   las
     .read(inputPath)
-    .filterData({})
+    .filterPoints({})
     .write(outputPath)
     .then(() => {
       const output = fs.readFileSync(outputPath);

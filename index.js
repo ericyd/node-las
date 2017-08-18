@@ -20,16 +20,15 @@ las.prototype.get = function get() {
 };
 las.prototype.write = _write;
 las.prototype.toJSON = _toJSON;
-// TODO: I think prototyping filter is conflicting with built in filter prototypes;
-// probably need to choose a new name, though I'm not a huge fan of filterData
-las.prototype.filterData = function filterData(options) {
+
+function filterPoints(options) {
   return this.map(task => {
     return task.map(binary => {
       // versionMajor and minor are 24 and 25 bytes offset from the start of the file, respectively
       const versionMajor = binary.read('uint8', 24);
       const versionMinor = binary.read('uint8', 25);
-      // offsetToPointData is 95 bytes offset
-      const offsetToPointData = binary.read('uint32', 96);
+      // offsetToPoints is 96 bytes offset
+      const offsetToPoints = binary.read('uint32', 96);
       // number of bytes in the point records
       const pointDataLength = binary.read('uint16', 105);
       binary.seek(0);
@@ -37,28 +36,30 @@ las.prototype.filterData = function filterData(options) {
       // TODO: could probably read point data using the point data format declared in the typeset
       const filteredPoints = _filter({}, data.pointData);
       // console.log(data.pointData.length, filteredPoints.length);
-      // console.log(binaryTypeset.pointDataRecordFormat1);
-      // console.log(offsetToPointData);
+      // console.log(binaryTypeset.pointFormat1);
+      // console.log(offsetToPoints);
       // const pointBeforeWrite = binary.read(
-      //   binaryTypeset.pointDataRecordFormat1,
-      //   offsetToPointData
+      //   binaryTypeset.pointFormat1,
+      //   offsetToPoints
       // );
       // console.log(pointBeforeWrite);
       binary.write(
         // TODO: point data format needs to be dynamic
-        ['array', binaryTypeset.pointDataRecordFormat1, filteredPoints.length],
+        ['array', binaryTypeset.pointFormat1, filteredPoints.length],
         filteredPoints,
-        offsetToPointData
+        offsetToPoints
       );
 
       // const pointAfterWrite = binary.read(
-      //   binaryTypeset.pointDataRecordFormat1,
-      //   offsetToPointData
+      //   binaryTypeset.pointFormat1,
+      //   offsetToPoints
       // );
       // console.log(pointAfterWrite);
       return binary;
     });
   });
-};
+}
+
+las.prototype.where = las.prototype.filterPoints = filterPoints;
 
 module.exports = las;
