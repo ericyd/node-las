@@ -22,7 +22,7 @@ const las = require('../index');
 const res = las
   .read('test/data/malheur-or.las')
   // .toJSON()
-  .filterPoints({})
+  .where({})
   .write('sample.las')
   // .then(data => console.log(data))
   .catch(console.log.bind(console));

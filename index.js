@@ -24,37 +24,30 @@ las.prototype.toJSON = _toJSON;
 function filterPoints(options) {
   return this.map(task => {
     return task.map(binary => {
-      // versionMajor and minor are 24 and 25 bytes offset from the start of the file, respectively
-      const versionMajor = binary.read('uint8', 24);
+      // binary.read takes a data type and an offset in bytes
       const versionMinor = binary.read('uint8', 25);
-      // offsetToPoints is 96 bytes offset
+      const headerSize = binary.read('uint16', 94);
       const offsetToPoints = binary.read('uint32', 96);
-      // number of bytes in the point records
-      const pointDataLength = binary.read('uint16', 105);
-      binary.seek(0);
-      const data = binary.readAll();
-      // TODO: could probably read point data using the point data format declared in the typeset
-      const filteredPoints = _filter({}, data.pointData);
-      // console.log(data.pointData.length, filteredPoints.length);
-      // console.log(binaryTypeset.pointFormat1);
-      // console.log(offsetToPoints);
-      // const pointBeforeWrite = binary.read(
-      //   binaryTypeset.pointFormat1,
-      //   offsetToPoints
-      // );
-      // console.log(pointBeforeWrite);
+      const pointFormatType = binary.read('uint8', 104);
+      const pointFormat = binary.typeSet[`pointFormat${pointFormatType}`];
+      const numberOfPoints =
+        versionMinor < 4
+          ? binary.read('uint32', 107)
+          : binary.read('uint64', headerSize - 15 * 8);
+
+      const points = binary.read(
+        ['array', pointFormat, numberOfPoints],
+        offsetToPoints
+      );
+      const filteredPoints = _filter(options, points);
       binary.write(
-        // TODO: point data format needs to be dynamic
-        ['array', binaryTypeset.pointFormat1, filteredPoints.length],
+        ['array', pointFormat, filteredPoints.length],
         filteredPoints,
         offsetToPoints
       );
-
-      // const pointAfterWrite = binary.read(
-      //   binaryTypeset.pointFormat1,
-      //   offsetToPoints
-      // );
-      // console.log(pointAfterWrite);
+      // TODO: are these properties necessary?
+      const versionMajor = binary.read('uint8', 24);
+      const pointDataLength = binary.read('uint16', 105);
       return binary;
     });
   });
