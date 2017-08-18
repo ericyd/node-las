@@ -35,13 +35,27 @@ las.prototype.filterData = function filterData(options) {
       binary.seek(0);
       const data = binary.readAll();
       // TODO: could probably read point data using the point data format declared in the typeset
-      const filteredPoints = _filter(data.pointData);
+      const filteredPoints = _filter({}, data.pointData);
+      // console.log(data.pointData.length, filteredPoints.length);
+      // console.log(binaryTypeset.pointDataRecordFormat1);
+      // console.log(offsetToPointData);
+      // const pointBeforeWrite = binary.read(
+      //   binaryTypeset.pointDataRecordFormat1,
+      //   offsetToPointData
+      // );
+      // console.log(pointBeforeWrite);
       binary.write(
         // TODO: point data format needs to be dynamic
-        binaryTypeset.pointDataFormat1,
+        ['array', binaryTypeset.pointDataRecordFormat1, filteredPoints.length],
         filteredPoints,
         offsetToPointData
       );
+
+      // const pointAfterWrite = binary.read(
+      //   binaryTypeset.pointDataRecordFormat1,
+      //   offsetToPointData
+      // );
+      // console.log(pointAfterWrite);
       return binary;
     });
   });
