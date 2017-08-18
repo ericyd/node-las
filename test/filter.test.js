@@ -5,6 +5,7 @@ const R = require('ramda');
 const mockfs = require('mock-fs');
 const las = require('../');
 const filter = require('../lib/filter');
+const { log } = require('../lib/helpers');
 
 test('should return same points if empty filter options are passed', () => {
   const points = [1, 2, 3];
@@ -48,5 +49,5 @@ test('should write an identical file if filtered with empty options', done => {
       expect(outputSHA256).toEqual(inputSHA256);
       done();
     })
-    .catch(console.log.bind(console));
+    .catch(log);
 });

@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const R = require('ramda');
 const mockfs = require('mock-fs');
 const las = require('../');
+const { log } = require('../lib/helpers');
 
 // define helper functions for comparing files
 const getHashByAlgorithm = R.curry((algorithm, hashType, data) =>
@@ -40,5 +41,5 @@ test('output file should match input file', done => {
       expect(outputSHA256).toEqual(inputSHA256);
       done();
     })
-    .catch(console.log.bind(console));
+    .catch(log);
 });
