@@ -25,29 +25,24 @@ function filterPoints(options) {
   return this.map(task => {
     return task.map(binary => {
       // binary.read takes a data type and an offset in bytes
-      const versionMinor = binary.read('uint8', 25);
-      const headerSize = binary.read('uint16', 94);
-      const offsetToPoints = binary.read('uint32', 96);
-      const pointFormatType = binary.read('uint8', 104);
-      const pointFormat = binary.typeSet[`pointFormat${pointFormatType}`];
+      const header = binary.read(binary.typeSet.header, 0);
+      const pointFormat =
+        binary.typeSet[`pointFormat${header.pointFormatType}`];
       const numberOfPoints =
-        versionMinor < 4
-          ? binary.read('uint32', 107)
-          : binary.read('uint64', headerSize - 15 * 8);
+        header.versionMinor < 4
+          ? header.legacyNumberOfPoints
+          : header.numberOfPoints;
 
       const points = binary.read(
         ['array', pointFormat, numberOfPoints],
-        offsetToPoints
+        header.offsetToPoints
       );
       const filteredPoints = _filter(options, points);
       binary.write(
         ['array', pointFormat, filteredPoints.length],
         filteredPoints,
-        offsetToPoints
+        header.offsetToPoints
       );
-      // TODO: are these properties necessary?
-      const versionMajor = binary.read('uint8', 24);
-      const pointDataLength = binary.read('uint16', 105);
       return binary;
     });
   });
