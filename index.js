@@ -26,18 +26,17 @@ function filterPoints(options) {
     return task.map(binary => {
       // binary.read takes a data type and an offset in bytes
       const header = binary.read(binary.typeSet.header, 0);
-      const pointFormat =
-        binary.typeSet[`pointFormat${header.pointFormatType}`];
+      const pointFormat = binary.typeSet[`pointFormat${header.pointFormat}`];
       const numberOfPoints =
         header.versionMinor < 4
           ? header.legacyNumberOfPoints
           : header.numberOfPoints;
-
       const points = binary.read(
         ['array', pointFormat, numberOfPoints],
         header.offsetToPoints
       );
       const filteredPoints = _filter(options, points);
+
       binary.write(
         ['array', pointFormat, filteredPoints.length],
         filteredPoints,
