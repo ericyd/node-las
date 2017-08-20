@@ -36,12 +36,15 @@ function filterPoints(options) {
         header.offsetToPoints
       );
       const filteredPoints = _filter(options, points);
-
+      // console.log(points.length, filteredPoints.length);
       binary.write(
         ['array', pointFormat, filteredPoints.length],
         filteredPoints,
         header.offsetToPoints
       );
+      binary.view.byteLength -=
+        (points.length - filteredPoints.length) *
+        binary.typeSet.sizes[`pointFormat${header.pointFormat}`];
       return binary;
     });
   });

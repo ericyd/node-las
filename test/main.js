@@ -18,12 +18,24 @@
 //   .catch(console.log.bind(console));
 
 const las = require('../index');
+const R = require('ramda');
+const path = require('path');
 
-const res = las
-  .read('test/data/malheur-or.las')
+las
+  .read(path.join(__dirname, 'data', 'malheur-or.las'))
   // .toJSON()
-  .where({})
-  .write('sample.las')
-  // .then(data => console.log(data))
+  .where({ x: R.lt(33186869) })
+  .write(path.join(__dirname, 'data', 'sample.las'))
+  .then(() => {
+    // console.log(data.points[0]);
+    las
+      .read(path.join(__dirname, 'data', 'sample.las'))
+      // .toJSON()
+      // .where({ x: R.lt(33186869) })
+      .toJSON()
+      .then(data => {
+        console.log(data.length);
+      })
+      .catch(console.log.bind(console));
+  })
   .catch(console.log.bind(console));
-// console.log(res);
