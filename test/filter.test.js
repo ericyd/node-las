@@ -38,5 +38,9 @@ test('should write an identical file if filtered with empty options', done => {
       expect(outputSHA256).toEqual(inputSHA256);
       done();
     })
-    .catch(log);
+    .catch(err => {
+      log(err);
+      expect(err).toBeFalsy();
+      done();
+    });
 });

@@ -1,3 +1,4 @@
+const jBinary = require('jbinary');
 const _read = require('./lib/read');
 const _toJSON = require('./lib/toJSON');
 const _write = require('./lib/write');
@@ -24,8 +25,8 @@ las.prototype.toJSON = _toJSON;
 function filterPoints(options) {
   return this.map(task => {
     return task.map(binary => {
-      // binary.read takes a data type and an offset in bytes
-      const header = binary.read(binary.typeSet.header, 0);
+      const data = binary.readAll();
+      const header = data.header;
       const pointFormat = binary.typeSet[`pointFormat${header.pointFormat}`];
       const numberOfPoints =
         header.versionMinor < 4
@@ -35,17 +36,20 @@ function filterPoints(options) {
         ['array', pointFormat, numberOfPoints],
         header.offsetToPoints
       );
-      const filteredPoints = _filter(options, points);
-      // console.log(points.length, filteredPoints.length);
-      binary.write(
-        ['array', pointFormat, filteredPoints.length],
-        filteredPoints,
-        header.offsetToPoints
-      );
-      binary.view.byteLength -=
-        (points.length - filteredPoints.length) *
-        binary.typeSet.sizes[`pointFormat${header.pointFormat}`];
-      return binary;
+      const oldLength = data.points.length;
+      data.points = _filter(options, points);
+
+      // Must create new instance rather than mutate existing because memory is statically allocated.
+      // New size is based on new number of points
+      // https://github.com/jDataView/jBinary/issues/48
+      const newLength =
+        binary.view.byteLength -
+        (oldLength - data.points.length) *
+          binary.typeSet.sizes[`pointFormat${header.pointFormat}`];
+      const newBinary = new jBinary(newLength, binaryTypeset);
+      newBinary.writeAll(data);
+
+      return newBinary;
     });
   });
 }
