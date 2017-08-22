@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const mockfs = require('mock-fs');
+const R = require('ramda');
 const las = require('../');
 const filter = require('../lib/filter');
 const { log } = require('../lib/helpers');
@@ -16,11 +17,16 @@ afterAll(() => {
   mockfs.restore();
 });
 
-test('should write an identical file if filtered with empty options', done => {
+const handleError = R.curry((done, err) => {
+  log(err);
+  expect(err).toBeFalsy();
+  done();
+});
+
+test('should return identical JSON when filter is empty', done => {
   const inputPath = path.join(__dirname, 'data', 'malheur-or.las');
-  const outputPath = path.join(__dirname, 'data', 'sample2.las');
+  const outputPath = path.join(__dirname, 'data', 'sample.las');
   const input = fs.readFileSync(inputPath);
-  const inputSHA256 = sha256(input);
 
   mockfs({
     'test/data': {
@@ -31,16 +37,16 @@ test('should write an identical file if filtered with empty options', done => {
   las
     .read(inputPath)
     .where({})
-    .write(outputPath)
-    .then(() => {
-      const output = fs.readFileSync(outputPath);
-      const outputSHA256 = sha256(output);
-      expect(outputSHA256).toEqual(inputSHA256);
+    .write(outputPath, { returnJSON: true })
+    .then(expected => {
+      return Promise.all([
+        Promise.resolve(expected),
+        las.read(outputPath).toJSON()
+      ]);
+    })
+    .then(([expected, actual]) => {
+      expect(actual).toEqual(expected);
       done();
     })
-    .catch(err => {
-      log(err);
-      expect(err).toBeFalsy();
-      done();
-    });
+    .catch(handleError(done));
 });
