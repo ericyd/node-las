@@ -3,7 +3,7 @@ const path = require('path');
 const mockfs = require('mock-fs');
 const R = require('ramda');
 const las = require('../');
-const filter = require('../lib/filter');
+const { filter, testDataToComparators } = require('../lib/filter');
 const { log } = require('../lib/helpers');
 const { sha256 } = require('./util');
 
@@ -49,4 +49,19 @@ test('should return identical JSON when filter is empty', done => {
       done();
     })
     .catch(handleError(done));
+});
+
+test.only('generate comparators', () => {
+  // const list = [
+  //   ['x', R.lt(R.__, 5)],
+  //   ['y', R.gt(R.__, 6)],
+  //   ['z', R.lt(R.__, 10)]
+  // ];
+  const list = [['x', ['lt', 5]], ['y', ['gt', 6]], ['z', ['lt', 10]]];
+  const data = {
+    x: 4,
+    y: 7,
+    z: 9
+  };
+  log(testDataToComparators(list, data));
 });

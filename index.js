@@ -2,7 +2,7 @@ const jBinary = require('jbinary');
 const _read = require('./lib/read');
 const _toJSON = require('./lib/toJSON');
 const _write = require('./lib/write');
-const _filter = require('./lib/filter');
+const _filter = require('./lib/filter').filter;
 const binaryTypeset = require('./lib/binaryTypeset');
 
 const las = function(x) {
