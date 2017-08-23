@@ -25,7 +25,7 @@ Node-las requires data to be added with one of the following methods:
 * `load` (not yet implemented)
 
 Data can then be manipulated with one of the following methods:
-* `filter` (not yet implemented)
+* `filter`
 * `sample` (not yet implemented)
 
 Finally data can be output with one of the following methods:
@@ -52,6 +52,51 @@ methods that will allow you to work with the data.
 const las = require('node-las');
 
 las.read('sample.las').write('sample-copy.las');
+```
+
+### filter(options)
+
+* options `<object>`
+
+`options` declares the parameters by which the point data should be filtered.
+The keys should correspond to keys in the point data objects, and the values
+are comparison functions (with a unique form). If a point fails to satisfy any of the
+requirements declared in `options`, it will be removed from the filtered data set.
+
+The comparison functions are declared as arrays, where the first item in the array
+is a string which defines the function to use.  The subsequent items in the array are the
+arguments for that function.
+
+Valid comparison strings include:
+* `lt` | `lessThan` | `less than` for a "less than" comparison
+* `gt` | `greaterThan` | `greater than` for a "greater than" comparison
+* `eq` | `equal` | `equals` for an "equal to" comparison
+* `between` for an exclusive between comparison
+
+Any of the aliases listed above are valid. That is, `lt` and `less than` will return the same result.
+
+#### Examples
+
+```js
+// remove all points below 10000 elevation
+const las = require('las');
+
+las.read('sample.las')
+  .filter({
+    z: ['lt', 10000]
+  })
+  .write('filtered.las')
+```
+
+```js
+// select all points between two longitudes
+const las = require('las');
+
+las.read('sample.las')
+  .filter({
+    x: ['between', -127, -130]
+  })
+  .write('filtered.las')
 ```
 
 ### toJSON()
