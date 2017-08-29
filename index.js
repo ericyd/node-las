@@ -2,6 +2,7 @@ const jBinary = require('jbinary');
 const R = require('ramda');
 const _read = require('./lib/read');
 const _toJSON = require('./lib/toJSON');
+const _toTXT = require('./lib/toTXT');
 const _write = require('./lib/write');
 const _filter = require('./lib/filter');
 const binaryTypeset = require('./lib/binaryTypeset');
@@ -22,6 +23,7 @@ las.prototype.get = function get() {
 };
 las.prototype.write = _write;
 las.prototype.toJSON = _toJSON;
+las.prototype.toTXT = _toTXT;
 
 function filterPoints(options) {
   return this.map(task => {
