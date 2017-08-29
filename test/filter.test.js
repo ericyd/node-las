@@ -5,17 +5,18 @@ const R = require('ramda');
 const las = require('../');
 const filter = require('../lib/filter');
 const {
-  testDataToComparators,
+  testAll,
   filterWith,
   between,
-  betweenLazy
+  betweenLazy,
+  filterPoints
 } = filter.__testonly__;
 const { log } = require('../lib/helpers');
 const { sha256 } = require('./util');
 
 test('should return same points if empty filter options are passed', () => {
   const points = [1, 2, 3];
-  const filteredPoints = filter({}, points);
+  const filteredPoints = filterPoints({}, points);
   expect(filteredPoints).toEqual(points);
 });
 
@@ -64,7 +65,7 @@ test('comparator functions should return correctly', () => {
     y: 7,
     z: 9
   };
-  expect(testDataToComparators(list, data)).toEqual([4 < 5, 7 > 6, 9 < 10]);
+  expect(testAll(list, data)).toEqual([4 < 5, 7 > 6, 9 < 10]);
 });
 
 describe('less than', () => {
@@ -104,12 +105,8 @@ describe('less than', () => {
       y: 5,
       z: 5
     };
-    expect(testDataToComparators(Object.entries(options), data1)).toEqual([
-      true,
-      true,
-      true
-    ]);
-    expect(testDataToComparators(Object.entries(options), data2)).toEqual([
+    expect(testAll(Object.entries(options), data1)).toEqual([true, true, true]);
+    expect(testAll(Object.entries(options), data2)).toEqual([
       false,
       false,
       false
@@ -154,12 +151,8 @@ describe('greater than', () => {
       y: 5,
       z: 5
     };
-    expect(testDataToComparators(Object.entries(options), data1)).toEqual([
-      true,
-      true,
-      true
-    ]);
-    expect(testDataToComparators(Object.entries(options), data2)).toEqual([
+    expect(testAll(Object.entries(options), data1)).toEqual([true, true, true]);
+    expect(testAll(Object.entries(options), data2)).toEqual([
       false,
       false,
       false
@@ -196,11 +189,7 @@ test('should be able to use `between` (exclusive)', () => {
     z: 10
   };
   expect(filterWith(options, data)).toBe(false);
-  expect(testDataToComparators(Object.entries(options), data)).toEqual([
-    true,
-    false,
-    false
-  ]);
+  expect(testAll(Object.entries(options), data)).toEqual([true, false, false]);
 });
 
 describe('equal', () => {
@@ -240,12 +229,12 @@ describe('equal', () => {
       y: 3,
       z: 5
     };
-    expect(testDataToComparators(Object.entries(options), data1)).toEqual([
+    expect(testAll(Object.entries(options), data1)).toEqual([
       true,
       false,
       true
     ]);
-    expect(testDataToComparators(Object.entries(options), data2)).toEqual([
+    expect(testAll(Object.entries(options), data2)).toEqual([
       false,
       false,
       true
@@ -266,11 +255,7 @@ test('filters and data should be able to have different properties', () => {
     nomnomnom: 11
   };
   expect(filterWith(options, data)).toBe(true);
-  expect(testDataToComparators(Object.entries(options), data)).toEqual([
-    true,
-    true,
-    true
-  ]);
+  expect(testAll(Object.entries(options), data)).toEqual([true, true, true]);
 });
 
 describe('filtering point arrays', () => {
@@ -347,6 +332,6 @@ describe('filtering point arrays', () => {
       }
     ];
     const dataFiltered = [data[0], data[data.length - 1]];
-    expect(filter(options, data)).toEqual(dataFiltered);
+    expect(filterPoints(options, data)).toEqual(dataFiltered);
   });
 });
