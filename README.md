@@ -8,15 +8,22 @@ Thanks to the folks who built [jBinary], this may not be an impossible goal.
 The work on this is being done in the dev branch. The master will be updated when there is 
 a usable version of the program.
 
+
+
+
 ## Contents
 
 * [Usage](#usage)
 * [API](#api)
   * read
   * filter
-  * toJSON
   * write
+  * toJSON
+  * toTXT
 * [JSON structure](#json-structure)
+
+
+
 
 ## Usage
 
@@ -31,7 +38,10 @@ Data can then be manipulated with one of the following methods:
 Finally data can be output with one of the following methods:
 * `write`
 * `toJSON`
-* `toTXT` (not yet implemented)
+* `toTXT`
+
+
+
 
 ## API
 
@@ -53,6 +63,9 @@ const las = require('node-las');
 
 las.read('sample.las').write('sample-copy.las');
 ```
+
+
+
 
 ### filter(options)
 
@@ -99,6 +112,32 @@ las.read('sample.las')
   .write('filtered.las')
 ```
 
+
+
+
+### write(path[, options])
+
+* path `<string>`: filename to write data to
+* options `<object>`
+    * returnJSON `<boolean>` **Default**: false. If true, the promise returned by `write`
+    will resolve with the JSON data structure of the LAS file.
+    If false, the promise will resolve with no data.
+
+Returns a `Promise` after the file has been successfully written.
+Note that the resolved Promise does not contain any data.
+
+#### Example
+
+```js
+// create a copy of a LAS file
+const las = require('node-las');
+
+las.read('sample.las').write('sample-copy.las');
+```
+
+
+
+
 ### toJSON()
 
 Returns a `Promise` where the resolved data is a JSON representation of the LAS file data.
@@ -130,25 +169,56 @@ las
   });
 ```
 
-### write(path[, options])
 
-* path `<string>`: filename to write data to
-* options `<object>`
-    * returnJSON `<boolean>` **Default**: false. If true, the promise returned by `write`
-    will resolve with the JSON data structure of the LAS file.
-    If false, the promise will resolve with no data.
 
-Returns a `Promise` after the file has been successfully written.
-Note that the resolved Promise does not contain any data.
 
-#### Example
+### toTXT([columns])
+
+* columns `<[string]>` **Default**: `['x', 'y', 'z']`
+
+Returns a `Promise` where the resolved data is a block of text in comma-delimited text format.
+The first line of the text is the header row which will match the passed `columns` parameter
+or the default `x,y,z`. The subsequent lines are the selected properties from the LAS file's
+point data.
+
+This method can be useful if you want to create a customized ASCII representation of the LAS file.
+
+#### Examples
 
 ```js
-// create a copy of a LAS file
+// Write the text data to a file
 const las = require('node-las');
+const fs = require('fs');
 
-las.read('sample.las').write('sample-copy.las');
+las
+  .read('sample.las')
+  .toTXT()
+  .then(data => {
+    fs.writeFileSync('sample-json.json', data)
+  });
 ```
+
+```js
+// Customize the returned columns
+const las = require('node-las');
+const fs = require('fs');
+
+las
+  .read('sample.las')
+  .toTXT(['x','returnNumber','intensity','y'])
+  .then(data => {
+    console.log(data);
+    // First row is header, followed by data
+    //
+    // x,returnNumber,intensity,y
+    // 4246424,2,45,235626
+    // 4259484,1,97,145029
+    // ...
+  });
+```
+
+
+
 
 ## JSON Structure
 
