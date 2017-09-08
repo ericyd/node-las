@@ -4,7 +4,8 @@ const _read = require('./lib/read');
 const _toJSON = require('./lib/toJSON');
 const _toTXT = require('./lib/toTXT');
 const _write = require('./lib/write');
-const _filter = require('./lib/filter');
+const { filterBinary } = require('./lib/filter');
+const { sampleBinary } = require('./lib/sample');
 const binaryTypeset = require('./lib/binaryTypeset');
 
 const las = function(x) {
@@ -27,11 +28,20 @@ las.prototype.toTXT = _toTXT;
 
 function filterPoints(options) {
   return this.map(task => {
-    const filterWithOpts = _filter(options);
+    const filterWithOpts = filterBinary(options);
     return task.map(filterWithOpts);
   });
 }
 
 las.prototype.where = las.prototype.filterPoints = filterPoints;
+
+function samplePoints(number) {
+  return this.map(task => {
+    const sampleN = sampleBinary(number);
+    return task.map(sampleN);
+  });
+}
+
+las.prototype.sample = samplePoints;
 
 module.exports = las;

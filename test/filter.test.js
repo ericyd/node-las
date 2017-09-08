@@ -3,14 +3,14 @@ const path = require('path');
 const mockfs = require('mock-fs');
 const R = require('ramda');
 const las = require('../');
-const filter = require('../lib/filter');
 const {
+  filterBinary,
   testAll,
   filterWith,
   between,
   betweenLazy,
   filterPoints
-} = filter.__testonly__;
+} = require('../lib/filter');
 const { log } = require('../lib/helpers');
 const { sha256 } = require('./util');
 
