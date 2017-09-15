@@ -1,4 +1,4 @@
-# node-las<sup style="color:red">beta</sup>
+# Node LAS<sup style="color:red">beta</sup>
 LAS toolkit for working with Lidar data in Node
 
 This is very much a work in progress.
