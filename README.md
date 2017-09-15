@@ -137,6 +137,9 @@ las.read('sample.las')
   .then(data => console.log(data.points.length)) // 100
 ```
 
+
+
+
 ### write(path[, options])
 
 * path `<string>`: filename to write data to
@@ -155,6 +158,31 @@ Note that the resolved Promise does not contain any data.
 const las = require('node-las');
 
 las.read('sample.las').write('sample-copy.las');
+```
+
+
+
+### toGeoJSON()
+
+Returns a Promise that resolves with a GeoJSON `FeatureCollection<points>` object.
+Each Feature in the FeatureCollection contains the full properties of the LAS Point
+in the `properties` member.
+
+Useful for using with other libraries like [TurfJS](http://turfjs.org/) or any other
+application where GeoJSON is required.
+
+See the GeoJSON spec ([text](https://tools.ietf.org/rfc/rfc7946.txt) or [PDF](https://tools.ietf.org/pdf/rfc7946.pdf)) for more details.
+
+```js
+// view a JSON representation of the data
+const las = require('node-las');
+const turf = require('@turf/turf');
+
+las.read('sample.las')
+  .toGeoJSON()
+  .then(geojson => {
+    turf.tin(geojson) // now we have a TIN of our points - woo!
+  });
 ```
 
 
