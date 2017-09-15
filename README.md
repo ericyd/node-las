@@ -17,7 +17,9 @@ a usable version of the program.
 * [API](#api)
   * read
   * filter
+  * sample
   * write
+  * toGeoJSON
   * toJSON
   * toTXT
 * [JSON structure](#json-structure)
@@ -114,6 +116,26 @@ las.read('sample.las')
 
 
 
+
+### sample(n)
+
+* n `<number>`: the inverse of the sample rate
+
+Takes every `n` points, resulting in a points array that is 1/n the size of the original points array.
+
+```js
+// Reduce the point count by a third
+const las = require('las');
+
+las.read('sample.las')
+  .toJSON()
+  .then(data => console.log(data.points.length)) // 300
+
+las.read('sample.las')
+  .sample(3)
+  .toJSON()
+  .then(data => console.log(data.points.length)) // 100
+```
 
 ### write(path[, options])
 
