@@ -119,9 +119,14 @@ las.read('sample.las')
 
 ### sample(n)
 
-* n `<number>`: the inverse of the sample rate
+* n `<number>`
 
 Takes every `n` points, resulting in a points array that is 1/n the size of the original points array.
+For example, if your point cloud had 9000 points and you used `sample(9)`,
+the resulting point cloud would contain 1000 points.
+
+Note that this function does a very unsophisticated sampling.
+To be more selective about which points to exclude, please consider using `filter`.
 
 ```js
 // Reduce the point count by a third
