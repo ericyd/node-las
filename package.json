@@ -27,6 +27,12 @@
     "Node",
     "Lidar"
   ],
+  "files": [
+    "LICENSE",
+    "README.md",
+    "index.js",
+    "lib/"
+  ],
   "author": "Eric Dauenhauer",
   "license": "MIT",
   "bugs": {
