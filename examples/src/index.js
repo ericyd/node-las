@@ -60,10 +60,9 @@ las
     maxz = Math.max.apply(null, zs);
 
     init(TIN);
+    animate();
   }, handleError)
   .catch(handleError);
-
-animate();
 
 function init(tin) {
   // transforms it into an array of arrays,
