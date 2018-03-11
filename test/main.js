@@ -21,21 +21,22 @@ const las = require('../index');
 const R = require('ramda');
 const path = require('path');
 
+// las
+//   .read(path.join(__dirname, 'data', 'malheur-or.las'))
+//   // .toJSON()
+//   .where({ x: R.lt(33186869) })
+//   .write(path.join(__dirname, 'data', 'sample.las'))
+//   .then(() => {
+// console.log(data.points[0]);
 las
-  .read(path.join(__dirname, 'data', 'malheur-or.las'))
+  .read(path.join(__dirname, 'data', 'sample.las'))
   // .toJSON()
-  .where({ x: R.lt(33186869) })
-  .write(path.join(__dirname, 'data', 'sample.las'))
-  .then(() => {
-    // console.log(data.points[0]);
-    las
-      .read(path.join(__dirname, 'data', 'sample.las'))
-      // .toJSON()
-      // .where({ x: R.lt(33186869) })
-      .toJSON()
-      .then(data => {
-        console.log(data.length);
-      })
-      .catch(console.log.bind(console));
+  // .where({ x: R.lt(33186869) })
+  // .toJSON()
+  .write('sample.las', { returnJSON: true })
+  .then(data => {
+    console.log(data.points.length);
   })
   .catch(console.log.bind(console));
+// })
+// .catch(console.log.bind(console));

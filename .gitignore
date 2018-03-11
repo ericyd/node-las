@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+examples/dist
+examples/*.las
+*.nocommit.md
