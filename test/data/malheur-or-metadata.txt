@@ -1,0 +1,28 @@
+Dataset Information:
+
+Dataset Name: Lidar Survey of the Malheur National Forest, Oregon
+Dataset Short Name: OR07_MalheurNF
+DOI: 10.5069/G9QJ7F74
+
+Acknowledgement: 
+Proper credit to Malheur National Forest and Rocky Mountain Research Station, U.S. Forest Service.
+https://doi.org/10.5069/G9QJ7F74
+
+Data Access Acknowledgement: This material is based on [data, processing] services provided by the OpenTopography Facility with support from the National Science Foundation under NSF Award Numbers 1226353 & 1225810
+
+Horizontal Coordinates: UTM z11N NAD83 [EPSG: 26911]
+Vertical Coordinates: NAVD88 (GEOID03) [EPSG: 5703]
+
+Job Description:
+  Title: Lidar Survey of the Malheur National Forest, Oregon
+  Description:Lidar Survey of the Malheur National Forest, Oregon
+
+Job Processing Result:
+  Number of Points: 413
+
+Data Selection Coordinates: 
+  Xmin: 331857.964091
+  Xmax: 331868.825913
+  Ymin: 4888592.425268
+  Ymax: 4888602.10526
+  Classifications: all

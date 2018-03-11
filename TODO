@@ -1,0 +1,32 @@
+* **Add support and tests for all LAS file types. Currently only 1.0 and 1.4 are sort-of supported**
+* Review LAs specifications and determine if additional context switching is necessary in the binary typeset
+* Improve `filter`
+    * complete `filter` documentation
+    * finish filter tests and implementation
+        * add tests for point return, scan angle, etc
+        * double check las2las docs to make sure all basic cases are covered
+    * refactor index.js `filter` method to use R.compose
+    * maybe incorporate error handling with `warn` when someone submits invalid arguments to filter?
+    * write own lt/gt functions that have args in "correct" order. Re-arrange arguments to lt, gt, and between
+    * consider currying and pre-loading functions in filter before testing each point.  I believe it would be faster to partially apply before testing thousands of points
+* add options (and defaults) to `write` to write different formats (text/ascii, json, binary)
+* consider possible additions to API
+    * methods to add/remove VLRs and EVLRs.
+    * a `load` method that would take a JSON representation of a LAS file as the input and return a jBinary instance.
+        * this might be more challenging than it would be beneficial. Would anyone ever have data in this format to begin with?
+        * consider that in order for memory to be correctly allocated, the predicted file size of the entire LAS binary would need to be calculated.
+* add a basic sample method that takes every n number of points
+* Create `examples` directory
+    * possibly incorporate turf.js
+* Add TravisCI
+* Create publishing checklist
+    * create PR and verify that build passes
+    * merge
+    * bump package version
+    * tag with most recent version
+    * Release most recent version
+    * publish most recent version
+* review inline TODOs in the code
+* configure eslint for non-formatting-related linting
+
+* ~~add toTXT method~~
