@@ -5,8 +5,16 @@ This is very much a work in progress.
 The long-term goal is to create a [libLAS] or [LAStools] -esque toolkit written entirely in Javascript.
 Thanks to the folks who built [jBinary], this may not be an impossible goal.
 
-The work on this is being done in the dev branch. The master will be updated when there is 
-a usable version of the program.
+
+
+
+## Project status
+
+This was kind of abandoned after I found that there are already some excellent LAS/LAZ viewers online (<http://potree.org/>, <http://plas.io/>). I couldn't really think of a reason to continue developing this into a more robust tool when browser visualization is probably the best reason for JavaScript LAS implementation anyway.
+
+However, a lot of groundwork has been laid here so feel free to fork or collaborate if this project seems interesting to you.
+
+A note of caution: LAS uses a lot of `double` values in its binary encoding, which JavaScript does not handle elegantly. More investigation needed into how to accurately parse those values and use them to read/write values.
 
 
 
